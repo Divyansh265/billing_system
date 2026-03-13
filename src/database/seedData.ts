@@ -10,8 +10,8 @@ export const seedData = async () => {
 
     await pool.query(`
       INSERT INTO Users (name) VALUES 
-      ('John Doe'),
-      ('Jane Smith')
+      ('Admin'),
+      ('User')
       ON CONFLICT DO NOTHING
     `);
 
