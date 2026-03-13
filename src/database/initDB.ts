@@ -5,36 +5,38 @@ export const initDB = async () => {
     await pool.query(`
         CREATE TABLE IF NOT EXISTS Users (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(100) 
+            name VARCHAR(100) NOT NULL
         );
     `);
     await pool.query(`
         CREATE TABLE IF NOT EXISTS Plans(
             id SERIAL PRIMARY KEY,
-            name VARCHAR(100) ,
-            monthlyQuota INT ,
-            extraChargePerUnit DECIMAL(10,2) 
-     ) `);
+            name VARCHAR(100) NOT NULL,
+            monthlyQuota INT NOT NULL,
+            extraChargePerUnit DECIMAL(10,2) NOT NULL
+        );
+    `);
     await pool.query(`
         CREATE TABLE IF NOT EXISTS Subscriptions(
             id SERIAL PRIMARY KEY,
-            userId INT REFERENCES Users(id) ,
-           planId INT REFERENCES Plans(id) ,
-            startDate Date,
-            isActive BOOLEAN
+            userId INT NOT NULL REFERENCES Users(id),
+            planId INT NOT NULL REFERENCES Plans(id),
+            startDate DATE NOT NULL,
+            isActive BOOLEAN NOT NULL DEFAULT true
         );
-            `);
+    `);
     await pool.query(`
         CREATE TABLE IF NOT EXISTS UsageRecords(
             id SERIAL PRIMARY KEY,
-            userId INT REFERENCES Users(id) ,
-          action VARCHAR(100) ,
-            usedUnits INT ,
+            userId INT NOT NULL REFERENCES Users(id),
+            action VARCHAR(100) NOT NULL,
+            usedUnits INT NOT NULL,
             createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-            `);
-    console.log("Database table created");
+    `);
+    console.log("Database tables created successfully");
   } catch (error) {
     console.error("Error initializing database:", error);
+    throw error;
   }
 };
